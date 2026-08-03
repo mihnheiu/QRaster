@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=QRaster
+Comment=High Performance QR Code Grid Raster & Editor
+Exec=python3 /usr/share/qraster/main.py
+Icon=/usr/share/qraster/icon.png
+Terminal=false
+Type=Application
+Categories=Utility;Graphics;

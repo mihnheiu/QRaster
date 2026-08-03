@@ -1,0 +1,15 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# PyInstaller / Executables
+build/
+dist/
+*.exe
+*.app/
+*.spec
+
+# OS Generated Files
+.DS_Store
+Thumbs.db

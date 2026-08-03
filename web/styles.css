@@ -1,0 +1,341 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    background-color: #f0f0f0;
+    color: #000000;
+    padding: 15px;
+    display: flex;
+    justify-content: center;
+}
+
+.app-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 950px;
+}
+
+/* Control Panel */
+.control-panel {
+    background-color: #f0f0f0;
+    padding: 10px 0 10px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: center;
+    width: 100%;
+}
+
+.control-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+label {
+    font-size: 14px;
+}
+
+select {
+    padding: 3px 8px;
+    font-size: 14px;
+    border: 1px solid #a0a0a0;
+    border-radius: 2px;
+    background-color: #ffffff;
+}
+
+button {
+    padding: 4px 12px;
+    font-size: 14px;
+    background-color: #e1e1e1;
+    border: 1px solid #adadad;
+    border-radius: 2px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #e5e5e5;
+    border-color: #0078d7;
+}
+
+button:active {
+    background-color: #cccccc;
+}
+
+.btn-help {
+    background-color: #0078d7;
+    color: #ffffff;
+    border-color: #005a9e;
+    font-weight: bold;
+}
+
+.btn-help:hover {
+    background-color: #005a9e;
+}
+
+/* Dropdown styling */
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    background-color: #ffffff;
+    min-width: 180px;
+    box-shadow: 0px 4px 10px rgba(0,0,0,0.2);
+    z-index: 50;
+    border: 1px solid #adadad;
+    border-radius: 2px;
+}
+
+.dropdown-menu a {
+    color: #333333;
+    padding: 8px 12px;
+    text-decoration: none;
+    display: block;
+    font-size: 13px;
+}
+
+.dropdown-menu a:hover {
+    background-color: #0078d7;
+    color: #ffffff;
+}
+
+.dropdown.active .dropdown-menu {
+    display: block;
+}
+
+.info-label {
+    font-size: 14px;
+    font-weight: bold;
+    margin-left: 10px;
+}
+
+/* Simple Minimalist Readability Meter */
+.readability-section {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    margin-top: 4px;
+}
+
+.readability-meter-bar {
+    width: 150px;
+    height: 10px;
+    background-color: #e0e0e0;
+    border: 1px solid #adadad;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.readability-meter-fill {
+    height: 100%;
+    width: 0%;
+    background-color: #0078d7;
+    transition: width 0.2s ease;
+}
+
+.decoded-simple {
+    font-size: 13px;
+    font-weight: bold;
+    color: #008000;
+}
+
+/* Grid Viewport & Table */
+.grid-viewport {
+    width: 100%;
+    overflow: auto;
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+.grid-container {
+    display: grid;
+    gap: 0px;
+    padding: 0px;
+    user-select: none;
+    background-color: #f0f0f0;
+}
+
+.header-label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    color: #333333;
+    background-color: #f0f0f0;
+    min-width: 20px;
+    min-height: 20px;
+}
+
+.header-col {
+    text-align: center;
+}
+
+.header-row {
+    text-align: right;
+    padding-right: 4px;
+}
+
+.grid-cell {
+    width: 20px;
+    height: 20px;
+    background-color: #ffffff;
+    border: none;
+    box-sizing: border-box;
+    cursor: pointer;
+}
+
+.grid-cell.black {
+    background-color: #000000;
+}
+
+.grid-cell.active {
+    outline: 2px solid #0078d7;
+    outline-offset: -2px;
+    z-index: 10;
+}
+
+/* Guide Modal Styling */
+.modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 100;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-overlay.active {
+    display: flex;
+}
+
+.modal-content {
+    background: #ffffff;
+    width: 90%;
+    max-width: 750px;
+    max-height: 85vh;
+    border-radius: 4px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.modal-header {
+    padding: 12px 16px;
+    background: #f0f0f0;
+    border-bottom: 1px solid #ccc;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-header h2 {
+    font-size: 16px;
+    color: #0078d7;
+}
+
+.btn-close {
+    background: none;
+    border: none;
+    font-size: 20px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.modal-body {
+    padding: 16px;
+    overflow-y: auto;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.guide-nav {
+    display: flex;
+    gap: 5px;
+    margin-bottom: 15px;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 8px;
+}
+
+.tab-btn {
+    background: #e8e8e8;
+    border: 1px solid #ccc;
+    padding: 6px 12px;
+    font-size: 13px;
+    cursor: pointer;
+    border-radius: 3px;
+}
+
+.tab-btn.active {
+    background: #0078d7;
+    color: #fff;
+    border-color: #005a9e;
+}
+
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+.tab-content h3 {
+    font-size: 15px;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.tab-content p {
+    margin-bottom: 8px;
+}
+
+.tab-content ul {
+    margin-left: 20px;
+    margin-bottom: 12px;
+}
+
+.tab-content li {
+    margin-bottom: 6px;
+}
+
+.guide-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+.guide-table th, .guide-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+    font-size: 13px;
+}
+
+.guide-table th {
+    background: #f5f5f5;
+}
+
+code {
+    background: #f4f4f4;
+    padding: 2px 5px;
+    border-radius: 3px;
+    border: 1px solid #ddd;
+    font-family: monospace;
+}

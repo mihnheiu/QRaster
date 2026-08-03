@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QRaster - QR Code Editor & Decoder</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Minimal Top Controls -->
+        <div class="control-panel">
+            <div class="control-row">
+                <label for="sizeSelect">Select QR Code Size:</label>
+                <select id="sizeSelect">
+                    <!-- Populated dynamically: 21x21 to 161x161 -->
+                </select>
+                <span id="infoLabel" class="info-label">QR Code Size: 21x21</span>
+                <button id="btnGuide" class="btn-help">❓ Guide & QR Info</button>
+            </div>
+            <div class="control-row">
+                <button id="btnGenerate">Generate Grid</button>
+                <button id="btnFinders">Finder Patterns</button>
+                <button id="btnTiming">Timing Patterns</button>
+                <button id="btnAlign">Alignment Patterns</button>
+                <button id="btnAllPatterns">All Patterns</button>
+            </div>
+            <div class="control-row">
+                <button id="btnUndo">Undo (Ctrl+Z)</button>
+                <button id="btnRedo">Redo (Ctrl+Y)</button>
+                
+                <!-- Multi-format Save & Open -->
+                <div class="dropdown">
+                    <button id="btnSave" class="btn-dropdown">Save Matrix ▾</button>
+                    <div id="saveDropdownMenu" class="dropdown-menu">
+                        <a href="#" id="saveJson">Save as JSON (.json)</a>
+                        <a href="#" id="saveTxt">Save as Plain Text (.txt)</a>
+                        <a href="#" id="saveCsv">Save as CSV Matrix (.csv)</a>
+                        <a href="#" id="savePng">Save as Image (.png)</a>
+                        <a href="#" id="saveSvg">Save as Vector (.svg)</a>
+                    </div>
+                </div>
+
+                <button id="btnOpen">Open File</button>
+                <input type="file" id="fileInput" accept=".json,.txt,.csv,.png,.jpg,.jpeg,.bmp,.webp,.svg" style="display:none;">
+
+                <button id="btnClear">Clear Grid</button>
+                <button id="btnInvert">Invert Colors</button>
+            </div>
+
+            <!-- Readability Meter -->
+            <div class="readability-section">
+                <span>Readability: <strong id="readabilityPercent">0%</strong></span>
+                <div class="readability-meter-bar">
+                    <div id="meterBarFill" class="readability-meter-fill"></div>
+                </div>
+                <span id="readabilityStatus">Requires patterns...</span>
+                <span id="decodedPayloadBox" class="decoded-simple" style="display:none;"></span>
+            </div>
+        </div>
+
+        <!-- Grid Workspace -->
+        <div class="grid-viewport">
+            <div id="gridContainer" class="grid-container">
+                <!-- Dynamically built grid -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Interactive Help Modal -->
+    <div id="guideModal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>📖 User Guide & QR Technical Knowledge</h2>
+                <button id="btnCloseModal" class="btn-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="guide-nav">
+                    <button class="tab-btn active" data-tab="tab1">1. About QR Code</button>
+                    <button class="tab-btn" data-tab="tab2">2. Technical Structure</button>
+                    <button class="tab-btn" data-tab="tab3">3. Readability Meter</button>
+                    <button class="tab-btn" data-tab="tab4">4. Usage & Shortcuts</button>
+                </div>
+
+                <div id="tab1" class="tab-content active">
+                    <h3>📌 What is a QR Code?</h3>
+                    <p>A <strong>QR Code (Quick Response Code)</strong> is a 2D matrix barcode invented by Denso Wave in 1994 and standardized under <strong>ISO/IEC 18004</strong>.</p>
+                    <p>Unlike standard 1D barcodes that hold small numbers, QR codes can store thousands of characters, URLs, or binary data with built-in fault tolerance via Galois Field Reed-Solomon error correction.</p>
+                </div>
+
+                <div id="tab2" class="tab-content">
+                    <h3>📐 Detailed QR Code Structure</h3>
+                    <ul>
+                        <li><strong>Finder Patterns (7x7):</strong> 3 square patterns located at Top-Left, Top-Right, and Bottom-Left corners to establish orientation and scale.</li>
+                        <li><strong>Timing Patterns:</strong> Alternating black and white modules along Row 7 and Column 7 connecting the Finder Patterns to determine module coordinates.</li>
+                        <li><strong>Alignment Patterns:</strong> Positioned across Version 2 ($25 \times 25$) to Version 40 ($161 \times 161$) matrices to prevent warping on curved surfaces.</li>
+                        <li><strong>Format Info & 8 Mask Patterns:</strong> Contains error correction level (L, M, Q, H) and 1 of 8 XOR masking patterns to break up large uniform areas.</li>
+                        <li><strong>Reed-Solomon Error Correction (Galois Field GF(256)):</strong> Mathematical engine that restores missing/damaged payload bytes automatically.</li>
+                    </ul>
+                </div>
+
+                <div id="tab3" class="tab-content">
+                    <h3>📊 How the Readability Meter Works</h3>
+                    <p>The <strong>Readability Meter</strong> evaluates real-time QR integrity based on ISO 18004 standards:</p>
+                    <ul>
+                        <li><strong>0% (Empty Grid):</strong> When no dark modules exist, Readability is strictly 0%.</li>
+                        <li><strong>Max 30% (Structural Patterns):</strong> Drawing all 3 Finder Patterns and Timing Patterns yields up to 30% structural readiness.</li>
+                        <li><strong>Remaining 70% (Data Payload & Reed-Solomon):</strong> As you draw/edit 70-80% of data modules, the GF(256) Reed-Solomon engine automatically calculates missing bytes and **decodes the string in real-time**!</li>
+                    </ul>
+                </div>
+
+                <div id="tab4" class="tab-content">
+                    <h3>⌨️ Keyboard Shortcuts & Features</h3>
+                    <table class="guide-table">
+                        <thead>
+                            <tr>
+                                <th>Action</th>
+                                <th>Shortcut / Button</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Toggle Cell Color</td>
+                                <td><code>Mouse Click</code>, <code>Space</code>, <code>Enter</code></td>
+                                <td>Toggle cell state between White and Black</td>
+                            </tr>
+                            <tr>
+                                <td>Move Cursor</td>
+                                <td><code>↑</code> <code>↓</code> <code>←</code> <code>→</code></td>
+                                <td>Move active grid cell cursor</td>
+                            </tr>
+                            <tr>
+                                <td>Undo</td>
+                                <td><code>Ctrl + Z</code> / Undo Button</td>
+                                <td>Revert to previous state</td>
+                            </tr>
+                            <tr>
+                                <td>Redo</td>
+                                <td><code>Ctrl + Y</code> / Redo Button</td>
+                                <td>Restore reverted state</td>
+                            </tr>
+                            <tr>
+                                <td>Save Formats</td>
+                                <td><code>Save Matrix ▾</code> Dropdown</td>
+                                <td>Export matrix as JSON, TXT, CSV, PNG image, or SVG vector</td>
+                            </tr>
+                            <tr>
+                                <td>Open Formats</td>
+                                <td><code>Open File</code> Button</td>
+                                <td>Import JSON, TXT, CSV matrix files or PNG, JPG, BMP, SVG image files</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
